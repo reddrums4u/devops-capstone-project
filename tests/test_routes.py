@@ -21,6 +21,7 @@ DATABASE_URI = os.getenv(
 BASE_URL = "/accounts"
 HTTPS_ENVIRON = {'wsgi.url_scheme': 'https'}
 
+
 ######################################################################
 #  T E S T   C A S E S
 ######################################################################
@@ -146,27 +147,27 @@ class TestAccountService(TestCase):
         """It should Update an existing Account"""
         # create an Account to update
         test_account = AccountFactory()
-        resp =self.client.post(
+        resp = self.client.post(
             BASE_URL,
             json=test_account.serialize()
         )
 
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         new_account = resp.get_json()
-        new_account["name"]="foo"
-        resp=self.client.put(
+        new_account["name"] = "foo"
+        resp = self.client.put(
             f"{BASE_URL}/{new_account['id']}",
             json=new_account
         )
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
-        updated_account=resp.get_json()
+        updated_account = resp.get_json()
         self.assertEqual(updated_account['name'], "foo")
 
     def test_update_not_allowed(self):
         """It should not allow an illegal method call"""
-        resp=self.client.put(f"{BASE_URL}/0")
+        resp = self.client.put(f"{BASE_URL}/0")
         self.assertEqual(resp.status_code, status.HTTP_404_NOT_FOUND)
-        
+
     def test_get_account_list(self):
         """It should Get a list of Accounts"""
         self._create_accounts(5)
@@ -178,9 +179,9 @@ class TestAccountService(TestCase):
     def test_delete_account(self):
         """It should Delete an Account"""
         account = self._create_accounts(1)[0]
-        resp= self.client.delete(f"{BASE_URL}/{account.id}")
+        resp = self.client.delete(f"{BASE_URL}/{account.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
-        
+
     def test_security_headers(self):
         """It should return security headers"""
         response = self.client.get('/', environ_overrides=HTTPS_ENVIRON)
@@ -201,4 +202,3 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # Check for the CORS header
         self.assertEqual(response.headers.get('Access-Control-Allow-Origin'), '*')
-
