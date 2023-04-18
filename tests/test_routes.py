@@ -155,7 +155,7 @@ class TestAccountService(TestCase):
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         new_account = resp.get_json()
         new_account["name"] = "foo"
-        resp=self.client.put(
+        resp = self.client.put(
             f"{BASE_URL}/{new_account['id']}",
             json=new_account
         )
@@ -179,7 +179,7 @@ class TestAccountService(TestCase):
     def test_delete_account(self):
         """It should Delete an Account"""
         account = self._create_accounts(1)[0]
-        resp= self.client.delete(f"{BASE_URL}/{account.id}")
+        resp = self.client.delete(f"{BASE_URL}/{account.id}")
         self.assertEqual(resp.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_security_headers(self):
